@@ -17,6 +17,9 @@ public class OverlayWindowManager
     private string? _currentTaskName;
     private DateTime? _startTime;
     private DispatcherTimer? _updateTimer;
+    private DispatcherTimer? _hoverCheckTimer;
+    private readonly Dictionary<Window, bool> _windowHoverState = new();
+    private readonly Dictionary<Window, System.Drawing.Rectangle> _overlayRegions = new();
 
     public void ShowOverlays(System.Windows.Media.Color borderColor, string overlayPosition, string? taskName = null, DateTime? startTime = null)
     {
@@ -53,6 +56,9 @@ public class OverlayWindowManager
             
             // Start timer to update elapsed time
             StartUpdateTimer();
+            
+            // Start hover detection timer
+            StartHoverCheckTimer();
         }
     }
 
@@ -61,11 +67,16 @@ public class OverlayWindowManager
         lock (_lock)
         {
             StopUpdateTimer();
+            StopHoverCheckTimer();
             foreach (var window in _overlayWindows)
             {
+                _windowHoverState.Remove(window);
+                _overlayRegions.Remove(window);
                 window.Close();
             }
             _overlayWindows.Clear();
+            _windowHoverState.Clear();
+            _overlayRegions.Clear();
             _currentTaskName = null;
             _startTime = null;
         }
@@ -165,6 +176,7 @@ public class OverlayWindowManager
         var (cornerX, cornerY, horizontalX1, horizontalX2, horizontalY, verticalX, verticalY1, verticalY2) = 
             CalculateCornerPosition(screen.Bounds.Width, screen.Bounds.Height, overlayPosition, cornerLength, cornerMargin);
 
+
         // Horizontal line (top/bottom part of bracket)
         var cornerHorizontal = new Line
         {
@@ -214,11 +226,61 @@ public class OverlayWindowManager
         var badge = CreateTaskBadge(borderColor, screen.Bounds.Width, screen.Bounds.Height, overlayPosition);
         grid.Children.Add(badge);
 
+        // Calculate overlay region for hover detection (badge + corner indicator area)
+        var (badgeHAlign, badgeVAlign, badgeMargin) = CalculateBadgePosition(overlayPosition, screen.Bounds.Width, screen.Bounds.Height);
+        var overlayRegionMargin = 60.0; // Extended margin around overlay elements
+        
+        // Calculate the actual overlay region bounds
+        double regionLeft, regionTop, regionWidth, regionHeight;
+        
+        if (badgeHAlign == System.Windows.HorizontalAlignment.Left)
+        {
+            regionLeft = badgeMargin.Left - overlayRegionMargin;
+            regionWidth = 400 + overlayRegionMargin * 2; // Badge width + margins
+        }
+        else if (badgeHAlign == System.Windows.HorizontalAlignment.Right)
+        {
+            regionLeft = screen.Bounds.Width - badgeMargin.Right - 400 - overlayRegionMargin;
+            regionWidth = 400 + overlayRegionMargin * 2;
+        }
+        else // Center
+        {
+            regionLeft = screen.Bounds.Width / 2 - 200 - overlayRegionMargin;
+            regionWidth = 400 + overlayRegionMargin * 2;
+        }
+        
+        if (badgeVAlign == System.Windows.VerticalAlignment.Top)
+        {
+            regionTop = badgeMargin.Top - overlayRegionMargin;
+            regionHeight = 200 + overlayRegionMargin * 2; // Badge height + corner indicator + margins
+        }
+        else if (badgeVAlign == System.Windows.VerticalAlignment.Bottom)
+        {
+            regionTop = screen.Bounds.Height - badgeMargin.Bottom - 200 - overlayRegionMargin;
+            regionHeight = 200 + overlayRegionMargin * 2;
+        }
+        else // Center
+        {
+            regionTop = screen.Bounds.Height / 2 - 100 - overlayRegionMargin;
+            regionHeight = 200 + overlayRegionMargin * 2;
+        }
+        
+        // Store overlay region relative to screen
+        _overlayRegions[window] = new System.Drawing.Rectangle(
+            (int)(screen.Bounds.Left + regionLeft),
+            (int)(screen.Bounds.Top + regionTop),
+            (int)regionWidth,
+            (int)regionHeight
+        );
+
         window.Content = grid;
 
         // Apply Win32 styles for click-through and always-on-top
         Win32Interop.MakeWindowClickThrough(window);
         Win32Interop.MakeWindowAlwaysOnTop(window);
+
+        // Initialize hover state
+        _windowHoverState[window] = false;
 
         return window;
     }
@@ -412,6 +474,87 @@ public class OverlayWindowManager
             _updateTimer.Stop();
             _updateTimer = null;
         }
+    }
+
+    private void StartHoverCheckTimer()
+    {
+        StopHoverCheckTimer();
+        
+        _hoverCheckTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(100) // Check every 100ms
+        };
+        _hoverCheckTimer.Tick += (s, e) =>
+        {
+            lock (_lock)
+            {
+                if (Win32Interop.GetCursorPos(out var cursorPos))
+                {
+                    foreach (var window in _overlayWindows)
+                    {
+                        if (_overlayRegions.TryGetValue(window, out var overlayRegion))
+                        {
+                            // Check if cursor is within the overlay region
+                            var isHovering = cursorPos.X >= overlayRegion.Left && 
+                                           cursorPos.X <= overlayRegion.Right && 
+                                           cursorPos.Y >= overlayRegion.Top && 
+                                           cursorPos.Y <= overlayRegion.Bottom;
+                            
+                            var wasHovering = _windowHoverState.GetValueOrDefault(window, false);
+                            
+                            if (isHovering != wasHovering)
+                            {
+                                _windowHoverState[window] = isHovering;
+                                
+                                // Temporarily disable click-through when hovering to enable mouse events
+                                Win32Interop.SetWindowClickThrough(window, !isHovering);
+                                
+                                if (isHovering)
+                                {
+                                    FadeOutWindow(window);
+                                }
+                                else
+                                {
+                                    FadeInWindow(window);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        _hoverCheckTimer.Start();
+    }
+
+    private void StopHoverCheckTimer()
+    {
+        if (_hoverCheckTimer != null)
+        {
+            _hoverCheckTimer.Stop();
+            _hoverCheckTimer = null;
+        }
+    }
+
+    private void FadeOutWindow(Window window)
+    {
+        var fadeOut = new DoubleAnimation
+        {
+            From = window.Opacity,
+            To = 0.0,
+            Duration = new Duration(TimeSpan.FromMilliseconds(300))
+        };
+        window.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+    }
+
+    private void FadeInWindow(Window window)
+    {
+        var fadeIn = new DoubleAnimation
+        {
+            From = window.Opacity,
+            To = 1.0,
+            Duration = new Duration(TimeSpan.FromMilliseconds(300))
+        };
+        window.BeginAnimation(UIElement.OpacityProperty, fadeIn);
     }
 
     public void RefreshMonitors(System.Windows.Media.Color borderColor, int borderThickness)
