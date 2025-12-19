@@ -1,0 +1,8 @@
+{
+  "ApiToken": "",
+  "TeamId": "",
+  "PollIntervalSeconds": 5,
+  "BorderColor": "#FF0000",
+  "OverlayPosition": "TopRight"
+}
+
