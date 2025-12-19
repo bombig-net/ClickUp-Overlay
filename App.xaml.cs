@@ -55,7 +55,7 @@ public partial class App : System.Windows.Application
         _notifyIcon = new NotifyIcon
         {
             Icon = customIcon,
-            Text = "ClickUp Timer Overlay",
+            Text = "ClickUpOverlay",
             Visible = true
         };
 
@@ -148,7 +148,7 @@ public partial class App : System.Windows.Application
     {
         Dispatcher.Invoke(() =>
         {
-            System.Windows.MessageBox.Show(message, "ClickUp Timer Overlay Error", 
+            System.Windows.MessageBox.Show(message, "ClickUpOverlay Error", 
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             
             // If polling stopped due to errors, show the configuration window

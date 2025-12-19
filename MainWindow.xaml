@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClickUpOverlay"
         mc:Ignorable="d"
-        Title="ClickUp Timer Overlay - Settings" MinWidth="800" Width="800" SizeToContent="Height"
+        Title="ClickUpOverlay - Settings" MinWidth="800" Width="800" SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundDark}"
         FontFamily="Segoe UI">
@@ -32,7 +32,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="ClickUp Timer Overlay" 
+            <TextBlock Grid.Column="0" Text="ClickUpOverlay" 
                        FontSize="24" FontWeight="SemiBold" 
                        Foreground="{StaticResource AccentColor}"
                        VerticalAlignment="Top"/>

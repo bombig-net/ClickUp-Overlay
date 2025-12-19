@@ -1,4 +1,4 @@
-# ClickUp Timer Overlay
+# ClickUpOverlay
 
 A Windows desktop application that displays a visual overlay indicator when a ClickUp timer is active. The overlay appears on all monitors with customizable corner indicators showing the current task name and elapsed time.
 
