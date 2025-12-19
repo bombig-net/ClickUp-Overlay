@@ -1,0 +1,230 @@
+﻿<Window x:Class="ClickUpOverlay.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClickUpOverlay"
+        mc:Ignorable="d"
+        Title="ClickUp Timer Overlay - Settings" MinWidth="800" Width="800" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundDark}"
+        FontFamily="Segoe UI">
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,25">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="ClickUp Timer Overlay" 
+                       FontSize="24" FontWeight="SemiBold" 
+                       Foreground="{StaticResource AccentColor}"
+                       VerticalAlignment="Top"/>
+            <TextBlock Grid.Column="0" Text="Configuration" 
+                       FontSize="14" 
+                       Foreground="{StaticResource TextSecondary}"
+                       Margin="0,40,0,0"/>
+            <Button x:Name="HelpButton" Grid.Column="1" Content="❓ Help" 
+                    Click="HelpButton_Click" Padding="12,8" FontSize="13"
+                    Background="{StaticResource BackgroundLight}"
+                    Foreground="{StaticResource TextPrimary}"
+                    BorderBrush="{StaticResource BorderColor}"
+                    VerticalAlignment="Top"/>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Text="API Token" 
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimary}" 
+                   Margin="0,0,0,8"/>
+        <PasswordBox x:Name="ApiTokenBox" Grid.Row="2" Margin="0,0,0,20" 
+                     PasswordChanged="ApiTokenBox_PasswordChanged"
+                     MinHeight="36" VerticalContentAlignment="Center"/>
+
+        <TextBlock Grid.Row="3" Text="Team ID" 
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimary}" 
+                   Margin="0,0,0,8"/>
+        <TextBox x:Name="TeamIdBox" Grid.Row="4" Margin="0,0,0,20" 
+                 TextChanged="TeamIdBox_TextChanged"
+                 MinHeight="36" VerticalContentAlignment="Center"/>
+
+        <TextBlock Grid.Row="5" Text="Poll Interval" 
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimary}" 
+                   Margin="0,0,0,8"/>
+        <TextBlock Grid.Row="5" Text="(seconds, min 2, max 60)" 
+                   FontSize="11"
+                   Foreground="{StaticResource TextSecondary}" 
+                   Margin="0,18,0,8"/>
+        <Grid Grid.Row="6" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Slider x:Name="PollIntervalSlider" Grid.Column="0" Minimum="2" Maximum="60" 
+                    ValueChanged="PollIntervalSlider_ValueChanged" 
+                    TickFrequency="1" IsSnapToTickEnabled="True"
+                    VerticalAlignment="Center" Height="24"/>
+            <TextBlock x:Name="PollIntervalValue" Grid.Column="1" Text="5" 
+                      Margin="15,0,0,0" VerticalAlignment="Center" MinWidth="35"
+                      FontSize="14" FontWeight="SemiBold"
+                      Foreground="{StaticResource AccentColor}"/>
+        </Grid>
+
+        <TextBlock Grid.Row="7" Text="Border Color" 
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimary}" 
+                   Margin="0,0,0,8"/>
+        <TextBlock Grid.Row="7" Text="(hex, e.g., #FF0000)" 
+                   FontSize="11"
+                   Foreground="{StaticResource TextSecondary}" 
+                   Margin="0,18,0,8"/>
+        <Grid Grid.Row="8" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="BorderColorBox" Grid.Column="0" 
+                    TextChanged="BorderColorBox_TextChanged"
+                    MinHeight="36" VerticalContentAlignment="Center"/>
+            <Border Grid.Column="1" Width="40" Height="40" 
+                    Margin="15,0,0,0" 
+                    BorderBrush="{StaticResource BorderColor}" 
+                    BorderThickness="2"
+                    CornerRadius="4"
+                    Background="Transparent">
+                <Rectangle x:Name="ColorPreview" 
+                          Margin="2" 
+                          RadiusX="2" RadiusY="2"/>
+            </Border>
+        </Grid>
+
+        <TextBlock Grid.Row="9" Text="Overlay Position" 
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimary}" 
+                   Margin="0,0,0,8"/>
+        <TextBlock Grid.Row="9" Text="Choose where the timer badge appears on screen" 
+                   FontSize="11"
+                   Foreground="{StaticResource TextSecondary}" 
+                   Margin="0,18,0,8"/>
+        <Grid Grid.Row="10" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Top row -->
+            <RadioButton x:Name="PositionTopLeft" Grid.Row="0" Grid.Column="0" Content="Top Left" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            <RadioButton x:Name="PositionTop" Grid.Row="0" Grid.Column="1" Content="Top" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            <RadioButton x:Name="PositionTopRight" Grid.Row="0" Grid.Column="2" Content="Top Right" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            
+            <!-- Middle row -->
+            <RadioButton x:Name="PositionLeft" Grid.Row="1" Grid.Column="0" Content="Left" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            <RadioButton x:Name="PositionRight" Grid.Row="1" Grid.Column="2" Content="Right" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            
+            <!-- Bottom row -->
+            <RadioButton x:Name="PositionBottomLeft" Grid.Row="2" Grid.Column="0" Content="Bottom Left" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            <RadioButton x:Name="PositionBottom" Grid.Row="2" Grid.Column="1" Content="Bottom" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+            <RadioButton x:Name="PositionBottomRight" Grid.Row="2" Grid.Column="2" Content="Bottom Right" 
+                        GroupName="OverlayPosition" Checked="PositionRadioButton_Checked" 
+                        Margin="5" Padding="8,6" FontSize="12"/>
+        </Grid>
+
+        <Border Grid.Row="11" Background="{StaticResource BackgroundMedium}" 
+                BorderBrush="{StaticResource BorderColor}" 
+                BorderThickness="1" 
+                CornerRadius="4" 
+                Padding="12,10" 
+                Margin="0,0,0,15">
+            <TextBlock x:Name="StatusLabel" Text="Status: Not configured" 
+                       FontSize="13" 
+                       Foreground="{StaticResource TextSecondary}"/>
+        </Border>
+
+        <Grid Grid.Row="12" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SaveButton" Grid.Column="0" Content="Save Configuration" 
+                    Click="SaveButton_Click" Height="40" FontSize="14" FontWeight="SemiBold"
+                    IsDefault="True" VerticalAlignment="Top"
+                    Background="{StaticResource AccentColor}"
+                    Foreground="White"
+                    BorderThickness="0">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF3333"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="{StaticResource BackgroundMedium}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="TestOverlayButton" Grid.Column="2" Content="Test Overlay (3s)" 
+                    Click="TestOverlayButton_Click" Height="40" FontSize="14" 
+                    VerticalAlignment="Top"/>
+        </Grid>
+        
+        <Grid Grid.Row="13" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="LogButton" Grid.Column="0" Content="📋 View Logs" 
+                    Click="LogButton_Click" Height="36" FontSize="13" 
+                    VerticalAlignment="Top"/>
+            <Button x:Name="ResetButton" Grid.Column="2" Content="Reset Everything" 
+                    Click="ResetButton_Click" Height="36" FontSize="13" 
+                    VerticalAlignment="Top" 
+                    Foreground="{StaticResource ErrorColor}" 
+                    Background="Transparent" 
+                    BorderBrush="{StaticResource ErrorColor}"/>
+        </Grid>
+    </Grid>
+</Window>

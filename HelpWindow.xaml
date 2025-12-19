@@ -1,0 +1,203 @@
+<Window x:Class="ClickUpOverlay.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ClickUp API Setup Guide" Height="650" Width="750"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundDark}"
+        FontFamily="Segoe UI">
+    <Grid Margin="25">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="ClickUp API Setup Guide" 
+                           FontSize="24" FontWeight="SemiBold" 
+                           Foreground="{StaticResource TextPrimary}"
+                           Margin="0,0,0,25"/>
+                
+                <TextBlock Text="Step 1: Get Your API Token" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,12" 
+                           Foreground="{StaticResource AccentColor}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,20"
+                           FontSize="14" LineHeight="22"
+                           Foreground="{StaticResource TextPrimary}">
+                    <Run Text="1. Log in to ClickUp at " FontWeight="Bold"/>
+                    <Hyperlink NavigateUri="https://app.clickup.com" RequestNavigate="Hyperlink_RequestNavigate">
+                        https://app.clickup.com
+                    </Hyperlink>
+                    <LineBreak/>
+                    <Run Text="2. Click on your profile picture/avatar in the bottom left corner"/>
+                    <LineBreak/>
+                    <Run Text="3. Select 'Apps' from the menu"/>
+                    <LineBreak/>
+                    <Run Text="4. Click on 'API' in the left sidebar"/>
+                    <LineBreak/>
+                    <Run Text="5. Click 'Generate' to create a new API token (or copy an existing one)"/>
+                    <LineBreak/>
+                    <Run Text="6. Copy the token - it looks like: pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+                    <LineBreak/>
+                    <Run Text="7. Paste it into the 'API Token' field above" FontWeight="Bold"/>
+                </TextBlock>
+
+                <TextBlock Text="Step 2: Find Your Team ID" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,12" 
+                           Foreground="{StaticResource AccentColor}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,20"
+                           FontSize="14" LineHeight="22"
+                           Foreground="{StaticResource TextPrimary}">
+                    <Run Text="1. In ClickUp, go to any Workspace"/>
+                    <LineBreak/>
+                    <Run Text="2. Look at the URL in your browser - it will look like:"/>
+                    <LineBreak/>
+                    <Run Text="   https://app.clickup.com/1234567/v/li/987654321" FontStyle="Italic"/>
+                    <LineBreak/>
+                    <Run Text="3. The Team ID is the first number after '/', in this example: " FontWeight="Bold"/>
+                    <Run Text="1234567" FontWeight="Bold" Foreground="Red"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Alternative method:"/>
+                    <LineBreak/>
+                    <Run Text="1. Go to Settings → Workspace Settings"/>
+                    <LineBreak/>
+                    <Run Text="2. The Team ID is shown in the URL or in the workspace settings page"/>
+                    <LineBreak/>
+                    <Run Text="3. Copy the Team ID and paste it into the 'Team ID' field above" FontWeight="Bold"/>
+                </TextBlock>
+
+                <TextBlock Text="Step 3: API Endpoint Information" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,12" 
+                           Foreground="{StaticResource AccentColor}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,20"
+                           FontSize="14" LineHeight="22"
+                           Foreground="{StaticResource TextPrimary}">
+                    <Run Text="This application uses the ClickUp API v2 endpoint:" FontWeight="SemiBold"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Endpoint: " FontWeight="SemiBold"/>
+                    <Run Text="GET /api/v2/team/{team_id}/time_entries/current" 
+                          FontFamily="Consolas" 
+                          Background="{StaticResource BackgroundMedium}"
+                          Foreground="#4EC9B0"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Base URL: " FontWeight="SemiBold"/>
+                    <Run Text="https://api.clickup.com" 
+                          FontFamily="Consolas" 
+                          Background="{StaticResource BackgroundMedium}"
+                          Foreground="#4EC9B0"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Full URL Example:" FontWeight="SemiBold"/>
+                    <LineBreak/>
+                    <Run Text="https://api.clickup.com/api/v2/team/1234567/time_entries/current" 
+                          FontFamily="Consolas" 
+                          Background="{StaticResource BackgroundMedium}"
+                          Foreground="#4EC9B0"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Authentication: " FontWeight="SemiBold"/>
+                    <Run Text="Personal API Token (sent directly in Authorization header)"/>
+                    <LineBreak/>
+                    <Run Text="Header: " FontWeight="SemiBold"/>
+                    <Run Text="Authorization: pk_your_personal_token" 
+                          FontFamily="Consolas" 
+                          Background="{StaticResource BackgroundMedium}"
+                          Foreground="#4EC9B0"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Important: " FontWeight="SemiBold" Foreground="{StaticResource ErrorColor}"/>
+                    <Run Text="ClickUp API does NOT use 'Bearer' prefix. Send the token directly!" 
+                          Foreground="{StaticResource ErrorColor}"/>
+                </TextBlock>
+
+                <TextBlock Text="Step 4: Test Your Configuration" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,12" 
+                           Foreground="{StaticResource AccentColor}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,20"
+                           FontSize="14" LineHeight="22"
+                           Foreground="{StaticResource TextPrimary}">
+                    <Run Text="1. Enter your API Token and Team ID in the fields above"/>
+                    <LineBreak/>
+                    <Run Text="2. Click 'Save Configuration' - the app will test the connection automatically"/>
+                    <LineBreak/>
+                    <Run Text="3. If the connection test fails, check:"/>
+                    <LineBreak/>
+                    <Run Text="   • API Token is correct and not expired"/>
+                    <LineBreak/>
+                    <Run Text="   • Team ID is correct (numbers only, no spaces)"/>
+                    <LineBreak/>
+                    <Run Text="   • You have internet connection"/>
+                    <LineBreak/>
+                    <Run Text="4. Once saved, the app will start polling every few seconds"/>
+                    <LineBreak/>
+                    <Run Text="5. When a timer is running in ClickUp, a red border will appear on all monitors"/>
+                </TextBlock>
+
+                <TextBlock Text="Troubleshooting" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,12" 
+                           Foreground="{StaticResource ErrorColor}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,20"
+                           FontSize="14" LineHeight="22"
+                           Foreground="{StaticResource TextPrimary}">
+                    <Run Text="• " FontWeight="SemiBold" Foreground="{StaticResource ErrorColor}"/>
+                    <Run Text="'Invalid API token' error: Check that you copied the full token correctly"/>
+                    <LineBreak/>
+                    <Run Text="• " FontWeight="SemiBold" Foreground="{StaticResource ErrorColor}"/>
+                    <Run Text="'Connection test failed': Verify your Team ID is correct"/>
+                    <LineBreak/>
+                    <Run Text="• " FontWeight="SemiBold" Foreground="{StaticResource ErrorColor}"/>
+                    <Run Text="Polling stops automatically: After 3 consecutive errors, polling stops for safety"/>
+                    <LineBreak/>
+                    <Run Text="• " FontWeight="SemiBold" Foreground="{StaticResource ErrorColor}"/>
+                    <Run Text="Use 'Reset Everything' button to clear all settings and start fresh"/>
+                    <LineBreak/>
+                    <Run Text="• " FontWeight="SemiBold" Foreground="{StaticResource ErrorColor}"/>
+                    <Run Text="Use 'Test Overlay' button to preview the border without ClickUp connection"/>
+                </TextBlock>
+
+                <TextBlock Text="API Rate Limits" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,12" 
+                           Foreground="{StaticResource AccentColor}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,20"
+                           FontSize="14" LineHeight="22"
+                           Foreground="{StaticResource TextPrimary}">
+                    <Run Text="ClickUp API allows 100 requests per minute per API token."/>
+                    <LineBreak/>
+                    <Run Text="This app respects this limit by:"/>
+                    <LineBreak/>
+                    <Run Text="• Minimum polling interval of 2 seconds (30 requests/minute)"/>
+                    <LineBreak/>
+                    <Run Text="• Default interval of 5 seconds (12 requests/minute)"/>
+                    <LineBreak/>
+                    <Run Text="• Maximum interval of 60 seconds"/>
+                    <LineBreak/>
+                    <Run Text="You can adjust the polling interval in the settings above."/>
+                </TextBlock>
+
+                <Button Content="Close" Click="CloseButton_Click" 
+                        HorizontalAlignment="Right" Margin="0,25,0,0" 
+                        Width="120" Height="40" FontSize="14" FontWeight="SemiBold"
+                        IsDefault="True"
+                        Background="{StaticResource AccentColor}"
+                        Foreground="White"
+                        BorderThickness="0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF3333"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
